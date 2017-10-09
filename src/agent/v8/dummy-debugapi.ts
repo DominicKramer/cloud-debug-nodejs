@@ -24,8 +24,7 @@ import {DebugApi} from './debugapi';
 
 export class DummyDebugApi implements DebugApi {
   constructor(
-      logger: Logger, _: DebugAgentConfig, __: ScanStats,
-      ___: SourceMapper) {
+      logger: Logger, _: DebugAgentConfig, __: ScanStats, ___: SourceMapper) {
     logger.error(
         'Debug agent cannot get node version. Cloud debugger is disabled.');
   }
@@ -34,8 +33,7 @@ export class DummyDebugApi implements DebugApi {
       cb(new Error('no debugapi running.'));
     });
   }
-  clear(_: stackdriver.Breakpoint, cb: (err: Error|null) => void):
-      void {
+  clear(_: stackdriver.Breakpoint, cb: (err: Error|null) => void): void {
     return setImmediate(() => {
       cb(new Error('no debugapi running.'));
     });

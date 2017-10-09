@@ -176,7 +176,7 @@ class StateResolver {
                that.rawVariableTable.length &&  // NOTE: length changes in loop
            (that.totalSize < that.config.capture.maxDataSize || noLimit)) {
       assert(!that.resolvedVariableTable[index]);  // shouldn't have it
-                                                    // resolved yet
+                                                   // resolved yet
       const isEvaluated = evalIndexSet.has(index);
       // TODO: This code suggests that an ObjectMirror and Stutus are the
       //       same.  Resolve this.
@@ -210,8 +210,7 @@ class StateResolver {
    * @param {Object} frames Frames associated with the current execution
    *                        environment.
    */
-  trimVariableTable(fromIndex: number, frames: stackdriver.StackFrame[]):
-      void {
+  trimVariableTable(fromIndex: number, frames: stackdriver.StackFrame[]): void {
     this.resolvedVariableTable.splice(
         fromIndex);  // remove the remaining entries
 
@@ -221,8 +220,7 @@ class StateResolver {
         if (variable.varTableIndex && variable.varTableIndex >= fromIndex) {
           // make it point to the sentinel 'buffer full' value
           variable.varTableIndex = BUFFER_FULL_MESSAGE_INDEX;
-          variable.status =
-              that.messageTable[BUFFER_FULL_MESSAGE_INDEX].status;
+          variable.status = that.messageTable[BUFFER_FULL_MESSAGE_INDEX].status;
         }
         if (variable.members) {
           processBufferFull(variable.members);
@@ -562,6 +560,5 @@ export function testAssert(): void {
 export function capture(
     execState: v8.ExecutionState, expressions: string[],
     config: DebugAgentConfig, v8debug: v8.Debug): stackdriver.Breakpoint {
-  return (new StateResolver(execState, expressions, config, v8debug))
-      .capture();
+  return (new StateResolver(execState, expressions, config, v8debug)).capture();
 }

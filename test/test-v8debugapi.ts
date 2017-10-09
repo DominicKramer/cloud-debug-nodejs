@@ -43,9 +43,9 @@ import * as utils from '../src/agent/util/utils';
 const code = require('./test-v8debugapi-code.js');
 
 function stateIsClean(api: DebugApi): boolean {
-  assert.equal(api.numBreakpoints_(), 0,
+  assert.equal(api.numBreakpoints(), 0,
     'there should be no breakpoints active');
-  assert.equal(api.numListeners_(), 0,
+  assert.equal(api.numListeners(), 0,
     'there should be no listeners active');
   return true;
 }
@@ -160,7 +160,7 @@ describe('v8debugapi', function() {
     const bp: stackdriver.Breakpoint = {id: breakpointInFoo.id, location: breakpointInFoo.location} as stackdriver.Breakpoint;
     api.set(bp, function(err) {
       assert.ifError(err);
-      assert.equal(api.numBreakpoints_(), 1);
+      assert.equal(api.numBreakpoints(), 1);
       api.clear(bp, function(err) {
         assert.ifError(err);
         done();
@@ -1426,13 +1426,13 @@ describe('v8debugapi', function() {
           assert.ifError(err);
           api.set(bp2, function(err) {
             assert.ifError(err);
-            assert.equal(api.numBreakpoints_(), 2);
+            assert.equal(api.numBreakpoints(), 2);
             api.clear(bp1, function(err) {
               assert.ifError(err);
-              assert.equal(api.numBreakpoints_(), 1);
+              assert.equal(api.numBreakpoints(), 1);
               api.clear(bp2, function(err) {
                 assert.ifError(err);
-                assert.equal(api.numBreakpoints_(), 0);
+                assert.equal(api.numBreakpoints(), 0);
                 done();
               });
             });

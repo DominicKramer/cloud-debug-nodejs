@@ -27,9 +27,9 @@ import * as scanner from '../src/agent/io/scanner';
 const foo = require('./test-try-catch-code.js');
 
 function stateIsClean(api: debugapi.DebugApi): boolean {
-  assert.equal(api.numBreakpoints_(), 0,
+  assert.equal(api.numBreakpoints(), 0,
     'there should be no breakpoints active');
-  assert.equal(api.numListeners_(), 0,
+  assert.equal(api.numListeners(), 0,
     'there should be no listeners active');
   return true;
 }
