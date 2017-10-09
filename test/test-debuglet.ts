@@ -305,10 +305,10 @@ describe('Debuglet', function() {
       const config = {capture: {maxExpandFrames: testValue}};
 
       // TODO: Fix this so that config does not have to be cast as DebugAgentConfig.
-      const mergedConfig = Debuglet.normalizeConfig_(config as DebugAgentConfig);
+      const mergedConfig = Debuglet.normalizeConfig(config as DebugAgentConfig);
       // TODO: Debuglet.normalizeConfig_() expects 1 parameter but the original
       //       test code had zero arguments here.  Determine which is correct.
-      const compareConfig = Debuglet.normalizeConfig_(null as any as DebugAgentConfig);
+      const compareConfig = Debuglet.normalizeConfig(null as any as DebugAgentConfig);
       // The actual config should be exactly defaultConfig with only
       // maxExpandFrames adjusted.
       compareConfig.capture.maxExpandFrames = testValue;
@@ -371,7 +371,7 @@ describe('Debuglet', function() {
       debuglet.once('registered', function(id: string) {
         assert.equal(id, DEBUGGEE_ID);
         // TODO: Handle the case where debuglet.debuggee is undefined
-        assert.equal((debuglet.debuggee_ as Debuggee).project, projectId);
+        assert.equal((debuglet.debuggee as Debuggee).project, projectId);
         debuglet.stop();
         scope.done();
         done();
@@ -399,7 +399,7 @@ describe('Debuglet', function() {
         debuglet.once('registered', function(id: string) {
           assert.equal(id, DEBUGGEE_ID);
           // TODO: Handle the case where debuglet.debuggee_ is undefined
-          assert.equal((debuglet.debuggee_ as any).project, process.env.GCLOUD_PROJECT);
+          assert.equal((debuglet.debuggee as any).project, process.env.GCLOUD_PROJECT);
           debuglet.stop();
           scope.done();
           done();
@@ -425,7 +425,7 @@ describe('Debuglet', function() {
            debuglet.once('registered', function(id: string) {
              assert.equal(id, DEBUGGEE_ID);
              // TODO: Handle the case where debuglet.debuggee_ is undefined
-             assert.equal((debuglet.debuggee_ as any).project, 'project-via-options');
+             assert.equal((debuglet.debuggee as any).project, 'project-via-options');
              debuglet.stop();
              scope.done();
              done();
@@ -446,7 +446,7 @@ describe('Debuglet', function() {
                         .reply(200, {debuggee: {id: DEBUGGEE_ID}});
 
         debuglet.once('registered', function() {
-          const logger = debuglet.logger_;
+          const logger = debuglet.logger;
           const STRING1 = 'jjjjjjjjjjjjjjjjjfjfjfjf';
           const STRING2 = 'kkkkkkkfkfkfkfkfkkffkkkk';
 
@@ -474,11 +474,11 @@ describe('Debuglet', function() {
         process.env.GAE_VERSION = 'fake-gae-version';
         const debug = new Debug({});
         const debuglet = new Debuglet(debug, defaultConfig);
-        assert.ok(debuglet.config_);
-        assert.ok(debuglet.config_.serviceContext);
-        assert.strictEqual(debuglet.config_.serviceContext.service,
+        assert.ok(debuglet.config);
+        assert.ok(debuglet.config.serviceContext);
+        assert.strictEqual(debuglet.config.serviceContext.service,
                            'fake-gae-service');
-        assert.strictEqual(debuglet.config_.serviceContext.version,
+        assert.strictEqual(debuglet.config.serviceContext.version,
                            'fake-gae-version');
       });
 
@@ -488,11 +488,11 @@ describe('Debuglet', function() {
            process.env.GAE_MODULE_VERSION = 'fake-gae-version';
            const debug = new Debug({});
            const debuglet = new Debuglet(debug, defaultConfig);
-           assert.ok(debuglet.config_);
-           assert.ok(debuglet.config_.serviceContext);
-           assert.strictEqual(debuglet.config_.serviceContext.service,
+           assert.ok(debuglet.config);
+           assert.ok(debuglet.config.serviceContext);
+           assert.strictEqual(debuglet.config.serviceContext.service,
                               'fake-gae-service');
-           assert.strictEqual(debuglet.config_.serviceContext.version,
+           assert.strictEqual(debuglet.config.serviceContext.version,
                               'fake-gae-version');
          });
 
@@ -501,11 +501,11 @@ describe('Debuglet', function() {
            process.env.FUNCTION_NAME = 'fake-fn-name';
            const debug = new Debug({});
            const debuglet = new Debuglet(debug, defaultConfig);
-           assert.ok(debuglet.config_);
-           assert.ok(debuglet.config_.serviceContext);
-           assert.strictEqual(debuglet.config_.serviceContext.service,
+           assert.ok(debuglet.config);
+           assert.ok(debuglet.config.serviceContext);
+           assert.strictEqual(debuglet.config.serviceContext.service,
                               'fake-fn-name');
-           assert.strictEqual(debuglet.config_.serviceContext.version,
+           assert.strictEqual(debuglet.config.serviceContext.version,
                               'unversioned');
          });
 
@@ -516,11 +516,11 @@ describe('Debuglet', function() {
         process.env.GAE_VERSION = 'fake-gae-version';
         const debug = new Debug({});
         const debuglet = new Debuglet(debug, defaultConfig);
-        assert.ok(debuglet.config_);
-        assert.ok(debuglet.config_.serviceContext);
-        assert.strictEqual(debuglet.config_.serviceContext.service,
+        assert.ok(debuglet.config);
+        assert.ok(debuglet.config.serviceContext);
+        assert.strictEqual(debuglet.config.serviceContext.service,
                            'fake-gae-service');
-        assert.strictEqual(debuglet.config_.serviceContext.version,
+        assert.strictEqual(debuglet.config.serviceContext.version,
                            'fake-gae-version');
       });
 
@@ -529,9 +529,9 @@ describe('Debuglet', function() {
            process.env.GAE_MINOR_VERSION = 'some minor version';
            const debug = new Debug({});
            const debuglet = new Debuglet(debug, defaultConfig);
-           assert.ok(debuglet.config_);
-           assert.ok(debuglet.config_.serviceContext);
-           assert.strictEqual(debuglet.config_.serviceContext.minorVersion_,
+           assert.ok(debuglet.config);
+           assert.ok(debuglet.config.serviceContext);
+           assert.strictEqual(debuglet.config.serviceContext.minorVersion_,
                               'some minor version');
          });
 
@@ -540,23 +540,23 @@ describe('Debuglet', function() {
            process.env.GAE_SERVICE = 'fake-gae-service';
            const debug = new Debug({});
            const debuglet = new Debuglet(debug, defaultConfig);
-           assert.ok(debuglet.config_);
-           assert.ok(debuglet.config_.serviceContext);
-           assert.ok(_.isString(debuglet.config_.serviceContext.minorVersion_));
+           assert.ok(debuglet.config);
+           assert.ok(debuglet.config.serviceContext);
+           assert.ok(_.isString(debuglet.config.serviceContext.minorVersion_));
          });
 
       it('should not have minorVersion unless enviroment provides it',
          function() {
            const debug = new Debug({});
            const debuglet = new Debuglet(debug, defaultConfig);
-           assert.ok(debuglet.config_);
-           assert.ok(debuglet.config_.serviceContext);
+           assert.ok(debuglet.config);
+           assert.ok(debuglet.config.serviceContext);
            assert.ok(
                // TODO: IMPORTANT: It appears that this test is incorrect as it
                //       is.  That is, if minorVersion is replaced with the
                //       correctly named minorVersion_, then the test fails.
                //       Resolve this.
-               _.isUndefined((debuglet.config_.serviceContext as any).minorVersion));
+               _.isUndefined((debuglet.config.serviceContext as any).minorVersion));
          });
 
       it('should not provide minorversion upon registration on non flex',
@@ -699,8 +699,8 @@ describe('Debuglet', function() {
     it('should pass source context to api if present', function(done) {
       const debug = new Debug(
           {projectId: 'fake-project', credentials: fakeCredentials});
-      const old = Debuglet.prototype.getSourceContext_;
-      Debuglet.prototype.getSourceContext_ = function(cb) {
+      const old = Debuglet.prototype.getSourceContext;
+      Debuglet.prototype.getSourceContext = function(cb) {
         setImmediate(function () {
           // TODO: Determine if 5 should be converted to a string or if the
           //       the object literal should allow keys with values that are
@@ -718,7 +718,7 @@ describe('Debuglet', function() {
                            }).reply(200, {debuggee: {id: DEBUGGEE_ID}});
 
       debuglet.once('registered', function(id: string) {
-        Debuglet.prototype.getSourceContext_ = old;
+        Debuglet.prototype.getSourceContext = old;
         assert.equal(id, DEBUGGEE_ID);
         debuglet.stop();
         scope.done();
@@ -741,7 +741,7 @@ describe('Debuglet', function() {
                  .reply(200, {debuggee: {id: DEBUGGEE_ID, isDisabled: true}});
 
          debuglet.once('remotelyDisabled', function() {
-           assert.ok(!debuglet.fetcherActive_);
+           assert.ok(!debuglet.fetcherActive);
            debuglet.stop();
            scope.done();
            done();
@@ -765,7 +765,7 @@ describe('Debuglet', function() {
 
       let gotDisabled = false;
       debuglet.once('remotelyDisabled', function() {
-        assert.ok(!debuglet.fetcherActive_);
+        assert.ok(!debuglet.fetcherActive);
         gotDisabled = true;
       });
 
@@ -821,7 +821,7 @@ describe('Debuglet', function() {
       debuglet.once('registered', function reg(id: string) {
         assert.equal(id, DEBUGGEE_ID);
         setTimeout(function() {
-          assert.deepEqual(debuglet.activeBreakpointMap_.test, bp);
+          assert.deepEqual(debuglet.activeBreakpointMap.test, bp);
           debuglet.stop();
           scope.done();
           done();
@@ -837,7 +837,7 @@ describe('Debuglet', function() {
       const debug = new Debug(
           {projectId: 'fake-project', credentials: fakeCredentials});
       const debuglet = new Debuglet(debug, defaultConfig);
-      debuglet.config_.allowExpressions = false;
+      debuglet.config.allowExpressions = false;
 
       const scope = nock(API)
         .post(REGISTER_PATH)
@@ -858,9 +858,9 @@ describe('Debuglet', function() {
       debuglet.once('registered', function reg(id: string) {
         assert.equal(id, DEBUGGEE_ID);
         setTimeout(function() {
-          assert.ok(!debuglet.activeBreakpointMap_.test);
+          assert.ok(!debuglet.activeBreakpointMap.test);
           debuglet.stop();
-          debuglet.config_.allowExpressions = true;
+          debuglet.config.allowExpressions = true;
           scope.done();
           done();
         }, 1000);
@@ -875,7 +875,7 @@ describe('Debuglet', function() {
       const debug = new Debug(
           {projectId: 'fake-project', credentials: fakeCredentials});
       const debuglet = new Debuglet(debug, defaultConfig);
-      debuglet.config_.allowExpressions = false;
+      debuglet.config.allowExpressions = false;
 
       const scope = nock(API)
         .post(REGISTER_PATH)
@@ -896,9 +896,9 @@ describe('Debuglet', function() {
       debuglet.once('registered', function reg(id: string) {
         assert.equal(id, DEBUGGEE_ID);
         setTimeout(function() {
-          assert.ok(!debuglet.activeBreakpointMap_.test);
+          assert.ok(!debuglet.activeBreakpointMap.test);
           debuglet.stop();
-          debuglet.config_.allowExpressions = true;
+          debuglet.config.allowExpressions = true;
           scope.done();
           done();
         }, 1000);
@@ -937,8 +937,8 @@ describe('Debuglet', function() {
       debuglet.once('registered', function reg(id: string) {
         assert.equal(id, DEBUGGEE_ID);
         setTimeout(function() {
-          assert.deepEqual(debuglet.activeBreakpointMap_.test, bp);
-          assert(!debuglet.activeBreakpointMap_.testLog);
+          assert.deepEqual(debuglet.activeBreakpointMap.test, bp);
+          assert(!debuglet.activeBreakpointMap.testLog);
           debuglet.stop();
           scope.done();
           done();
@@ -973,9 +973,9 @@ describe('Debuglet', function() {
       debuglet.once('registered', function(id: string) {
         assert.equal(id, DEBUGGEE_ID);
         setTimeout(function() {
-          assert.deepEqual(debuglet.activeBreakpointMap_.test, bp);
+          assert.deepEqual(debuglet.activeBreakpointMap.test, bp);
           setTimeout(function() {
-            assert(!debuglet.activeBreakpointMap_.test);
+            assert(!debuglet.activeBreakpointMap.test);
             debuglet.stop();
             scope.done();
             done();
@@ -1023,12 +1023,12 @@ describe('Debuglet', function() {
       debuglet.once('registered', function(id: string) {
         assert.equal(id, DEBUGGEE_ID);
         setTimeout(function() {
-          assert.deepEqual(debuglet.activeBreakpointMap_.test, bp);
+          assert.deepEqual(debuglet.activeBreakpointMap.test, bp);
           setTimeout(function() {
-            assert(!debuglet.activeBreakpointMap_.test);
+            assert(!debuglet.activeBreakpointMap.test);
             // Fetcher disables if we re-update since endpoint isn't mocked
             // twice
-            assert(debuglet.fetcherActive_);
+            assert(debuglet.fetcherActive);
             debuglet.stop();
             scope.done();
             done();
@@ -1107,7 +1107,7 @@ describe('Debuglet', function() {
 
   describe('_createUniquifier', function () {
     it('should create a unique string', function () {
-      const fn = Debuglet._createUniquifier;
+      const fn = Debuglet.createUniquifier;
 
       const desc = 'description';
       const version = 'version';
