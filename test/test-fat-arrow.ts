@@ -55,7 +55,7 @@ describe(__filename, function() {
           const jsStats = fileStats.selectStats(/.js$/);
           const mapFiles = fileStats.selectFiles(/.map$/, process.cwd());
           // TODO: Determine if the err parameter should be used.
-          SourceMapper.create(mapFiles, function (_err, mapper) {
+          SourceMapper.create(mapFiles, function (_, mapper) {
             // TODO: Handle the case when mapper is undefined
             // TODO: Handle the case when v8debugapi.create returns null
             api = debugapi.create(logger, config, jsStats, mapper as SourceMapper.SourceMapper) as debugapi.DebugApi;
@@ -75,10 +75,10 @@ describe(__filename, function() {
       id: 'fake-id-123',
       location: { path: 'fixtures/fat-arrow.js', line: 5 }
     } as stackdriver.Breakpoint;
-    api.set(brk, function(err) {
-      assert.ifError(err);
-      api.wait(brk, function(err) {
-        assert.ifError(err);
+    api.set(brk, function(err1) {
+      assert.ifError(err1);
+      api.wait(brk, function(err2) {
+        assert.ifError(err2);
         const frame = brk.stackFrames[0];
         const args = frame.arguments;
         const locals = frame.locals;
@@ -88,8 +88,8 @@ describe(__filename, function() {
           locals[0],
           {name: 'b', value: '1'}
         );
-        api.clear(brk, function(err) {
-          assert.ifError(err);
+        api.clear(brk, function(err3) {
+          assert.ifError(err3);
           done();
         });
       });
@@ -102,10 +102,10 @@ describe(__filename, function() {
       id: 'fake-id-123',
       location: { path: 'fixtures/fat-arrow.js', line: 6 }
     } as stackdriver.Breakpoint;
-    api.set(brk, function(err) {
-      assert.ifError(err);
-      api.wait(brk, function(err) {
-        assert.ifError(err);
+    api.set(brk, function(err1) {
+      assert.ifError(err1);
+      api.wait(brk, function(err2) {
+        assert.ifError(err2);
         // TODO: Fix this explicit cast.
         const frame = brk.stackFrames[0];
         const args = frame.arguments;
@@ -116,8 +116,8 @@ describe(__filename, function() {
           locals[0],
           {name: 'b', value: '2'}
         );
-        api.clear(brk, function(err) {
-          assert.ifError(err);
+        api.clear(brk, function(err3) {
+          assert.ifError(err3);
           done();
         });
       });

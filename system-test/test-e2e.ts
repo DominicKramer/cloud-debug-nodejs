@@ -32,7 +32,7 @@ const CLUSTER_WORKERS = 3;
 const FILENAME = 'build/test/fixtures/fib.js';
 
 const delay = function(delayTimeMS: number): Promise<void> {
-  return new Promise(function(resolve, _reject) {
+  return new Promise(function(resolve, __) {
     setTimeout(resolve, delayTimeMS);
   });
 };
@@ -207,12 +207,12 @@ describe('@google-cloud/debug end-to-end behavior', function () {
       console.log('-- waiting before checking if the log was written');
       return Promise.all([breakpoint, delay(10 * 1000)]);
       // TODO: Determine if the results parameter should be used.
-    }).then(function(_results: stackdriver.Breakpoint[]) {
+    }).then(function(__: stackdriver.Breakpoint[]) {
 
       // Check the contents of the log, but keep the original breakpoint.
 
       // TODO: This is never used.  Determine if it should be used.
-      //const breakpoint = results[0];
+      // const breakpoint = results[0];
 
       children.forEach(function(child, index) {
         assert(child.transcript.indexOf('o is: {"a":[1,"hi",true]}') !== -1,

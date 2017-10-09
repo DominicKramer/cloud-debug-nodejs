@@ -32,14 +32,14 @@ describe('Debuggee', function() {
   });
 
   it('should throw on invalid input', function() {
-    assert.throws(function() { new Debuggee({}); });
-    assert.throws(function() { new Debuggee({project: '5'}); });
-    assert.throws(function() { new Debuggee({project: undefined}); });
-    assert.throws(function() { new Debuggee({project: 'test'}); });
+    assert.throws(function() { const _ = new Debuggee({}); });
+    assert.throws(function() { const _ = new Debuggee({project: '5'}); });
+    assert.throws(function() { const _ = new Debuggee({project: undefined}); });
+    assert.throws(function() { const _ = new Debuggee({project: 'test'}); });
     assert.throws(function() {
-      new Debuggee({project: 'test', uniquifier: undefined});
+      const _ = new Debuggee({project: 'test', uniquifier: undefined});
       assert.throws(function() {
-        new Debuggee({project: 'test', uniquifier: 'uid'});
+        const __ = new Debuggee({project: 'test', uniquifier: 'uid'});
       });
     });
   });
