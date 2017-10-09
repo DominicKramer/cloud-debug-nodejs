@@ -31,13 +31,13 @@ export interface DebugApi {
       print: (format: string, exps: string[]) => void,
       shouldStop: () => boolean): void;
   disconnect(): void;
-  numBreakpoints_(): number;
-  numListeners_(): number;
+  numBreakpoints(): number;
+  numListeners(): number;
 }
 
 interface DebugApiConstructor {
-  new(logger_: Logger, config_: DebugAgentConfig, jsFiles_: ScanStats,
-      sourcemapper_: SourceMapper): DebugApi;
+  new(logger: Logger, config: DebugAgentConfig, jsFiles: ScanStats,
+      sourcemapper: SourceMapper): DebugApi;
 }
 
 let debugApiConstructor: DebugApiConstructor;

@@ -415,7 +415,7 @@ export class Debuglet extends EventEmitter {
     return new Promise<string>((resolve, reject) => {
       metadata.project(
           'project-id',
-          (err: Error, _res: http.ServerResponse, projectId: string) => {
+          (err: Error, __: http.ServerResponse, projectId: string) => {
             err ? reject(err) : resolve(projectId);
           });
     });
@@ -425,7 +425,7 @@ export class Debuglet extends EventEmitter {
     return new Promise<string>((resolve, reject) => {
       metadata.instance(
           'attributes/cluster-name',
-          (err: Error, _res: http.ServerResponse, clusterName: string) => {
+          (err: Error, __: http.ServerResponse, clusterName: string) => {
             err ? reject(err) : resolve(clusterName);
           });
     });

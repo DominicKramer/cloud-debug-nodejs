@@ -57,17 +57,17 @@ export class V8DebugApi implements debugapi.DebugApi {
       (evt: v8.DebugEvent, execState: v8.ExecutionState,
        eventData: v8.BreakEvent) => void;
 
-  numBreakpoints = 0;
+  breakpointCount = 0;
 
   constructor(
-      logger_: Logger, config_: DebugAgentConfig, jsFiles_: ScanStats,
-      sourcemapper_: SourceMapper) {
-    this.sourcemapper = sourcemapper_;
+      logger: Logger, config: DebugAgentConfig, jsFiles: ScanStats,
+      sourcemapper: SourceMapper) {
+    this.sourcemapper = sourcemapper;
     this.v8 = vm.runInDebugContext('Debug');
-    this.config = config_;
-    this.fileStats = jsFiles_;
+    this.config = config;
+    this.fileStats = jsFiles;
     this.v8Version = /(\d+\.\d+\.\d+)\.\d+/.exec(process.versions.v8);
-    this.logger = logger_;
+    this.logger = logger;
     this.usePermanentListener = semver.satisfies(this.v8Version[1], '>=4.5');
     this.handleDebugEvents =
         (evt: v8.DebugEvent, execState: v8.ExecutionState,
@@ -153,8 +153,8 @@ export class V8DebugApi implements debugapi.DebugApi {
     this.v8.clearBreakPoint(v8bp.number());
     delete this.breakpoints[breakpoint.id];
     delete this.listeners[v8bp.number()];
-    this.numBreakpoints--;
-    if (this.numBreakpoints === 0 && !this.usePermanentListener) {
+    this.breakpointCount--;
+    if (this.breakpointCount === 0 && !this.usePermanentListener) {
       // removed last breakpoint
       this.logger.info('deactivating v8 breakpoint listener');
       this.v8.setListener(null);
@@ -191,7 +191,7 @@ export class V8DebugApi implements debugapi.DebugApi {
     let timesliceEnd = Date.now() + 1000;
     // TODO: Determine why the Error argument is not used.
     const listener =
-        this.onBreakpointHit.bind(this, breakpoint, function(_err: Error) {
+        this.onBreakpointHit.bind(this, breakpoint, function(__: Error) {
           const currTime = Date.now();
           if (currTime > timesliceEnd) {
             logsThisSecond = 0;
@@ -228,11 +228,11 @@ export class V8DebugApi implements debugapi.DebugApi {
     return;
   }
 
-  numBreakpoints_(): number {
+  numBreakpoints(): number {
     return Object.keys(this.breakpoints).length;
   }
 
-  numListeners_(): number {
+  numListeners(): number {
     return Object.keys(this.listeners).length;
   }
 
@@ -329,7 +329,7 @@ export class V8DebugApi implements debugapi.DebugApi {
           cb, breakpoint, StatusMessage.BREAKPOINT_SOURCE_LOCATION,
           utils.messages.V8_BREAKPOINT_ERROR);
     }
-    if (this.numBreakpoints === 0 && !this.usePermanentListener) {
+    if (this.breakpointCount === 0 && !this.usePermanentListener) {
       // added first breakpoint
       this.logger.info('activating v8 breakpoint listener');
       this.v8.setListener(this.handleDebugEvents);
@@ -337,7 +337,7 @@ export class V8DebugApi implements debugapi.DebugApi {
     this.breakpoints[breakpoint.id] =
         // TODO: Address the case where `ast` is `null`.
         new V8BreakpointData(breakpoint, v8bp, ast as estree.Program, compile);
-    this.numBreakpoints++;
+    this.breakpointCount++;
     setImmediate(function() {
       cb(null);
     });  // success.

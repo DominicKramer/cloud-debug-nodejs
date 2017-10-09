@@ -57,15 +57,15 @@ export class InspectorDebugApi implements debugapi.DebugApi {
   // breakpointmapper maps v8/inspector breakpoint id to a list of
   // stackdriver breakpoint id.
   breakpointMapper: {[id: string]: stackdriver.BreakpointId[]} = {};
-  numBreakpoints = 0;
+  breakpointCount = 0;
   v8Inspector: V8Inspector;
   constructor(
-      logger_: Logger, config_: DebugAgentConfig, jsFiles_: ScanStats,
-      sourcemapper_: SourceMapper) {
-    this.logger = logger_;
-    this.config = config_;
-    this.fileStats = jsFiles_;
-    this.sourcemapper = sourcemapper_;
+      logger: Logger, config: DebugAgentConfig, jsFiles: ScanStats,
+      sourcemapper: SourceMapper) {
+    this.logger = logger;
+    this.config = config;
+    this.fileStats = jsFiles;
+    this.sourcemapper = sourcemapper;
     this.session = new inspector.Session();
     this.session.connect();
     this.session.on('Debugger.scriptParsed', (script) => {
@@ -159,7 +159,7 @@ export class InspectorDebugApi implements debugapi.DebugApi {
     }
     delete this.breakpoints[breakpoint.id];
     delete this.listeners[breakpoint.id];
-    this.numBreakpoints--;
+    this.breakpointCount--;
     setImmediate(function() {
       if (result.error) {
         cb(result.error);
@@ -192,7 +192,7 @@ export class InspectorDebugApi implements debugapi.DebugApi {
     let timesliceEnd = Date.now() + 1000;
     // TODO: Determine why the Error argument is not used.
     const listener =
-        this.onBreakpointHit.bind(this, breakpoint, (_err: Error) => {
+        this.onBreakpointHit.bind(this, breakpoint, (_: Error) => {
           const currTime = Date.now();
           if (currTime > timesliceEnd) {
             logsThisSecond = 0;
@@ -229,12 +229,12 @@ export class InspectorDebugApi implements debugapi.DebugApi {
     this.session.disconnect();
   }
 
-  numBreakpoints_(): number {
+  numBreakpoints(): number {
     // Tracks the number of stackdriver breakpoints.
     return Object.keys(this.breakpoints).length;
   }
 
-  numListeners_(): number {
+  numListeners(): number {
     return Object.keys(this.listeners).length;
   }
 
@@ -352,7 +352,7 @@ export class InspectorDebugApi implements debugapi.DebugApi {
         result.v8BreakpointId, breakpoint, ast as estree.Program,
         result.locationStr, compile);
 
-    this.numBreakpoints++;
+    this.breakpointCount++;
     setImmediate(function() {
       cb(null);
     });  // success.
