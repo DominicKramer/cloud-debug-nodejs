@@ -14,11 +14,16 @@
  * limitations under the License.
  */
 
+import {perf} from './performance';
+
 import {DebugAgentConfig, StackdriverConfig} from './agent/config';
 import {Debuglet, IsReady} from './agent/debuglet';
 import {Debug} from './client/stackdriver/debug';
 
 const pjson = require('../../package.json');
+
+const TimedDebug = perf.timedClass(Debug);
+const TimedDebuglet = perf.timedClass(Debuglet);
 
 // Singleton.
 let debuglet: Debuglet;
@@ -46,8 +51,8 @@ export function start(options?: DebugAgentConfig|StackdriverConfig): Debuglet|
     throw new Error('Debug Agent has already been started');
   }
 
-  const debug = new Debug(options, pjson);
-  debuglet = new Debuglet(debug, agentConfig);
+  const debug = new TimedDebug(options, pjson);
+  debuglet = new TimedDebuglet(debug, agentConfig);
   debuglet.start();
 
   return agentConfig.testMode_ ? debuglet : debuglet.isReadyManager;

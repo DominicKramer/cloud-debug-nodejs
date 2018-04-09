@@ -52,10 +52,10 @@ export class Debug extends common.Service {
   constructor(options: AuthenticationConfig, packageJson: {
     name: string; version: string;
   }) {
-    if (new.target !== Debug) {
-      options = common.util.normalizeArguments(null, options);
-      return new Debug(options, packageJson);
-    }
+    //if (new.target !== Debug) {
+    //  options = common.util.normalizeArguments(null, options);
+    //  return new Debug(options, packageJson);
+    //}
 
     const config = {
       projectIdRequired: false,

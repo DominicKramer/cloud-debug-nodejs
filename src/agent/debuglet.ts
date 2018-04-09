@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import {perf} from '../performance';
+
 import {AuthenticationConfig, Common} from '../types/common';
 const common: Common = require('@google-cloud/common');
 
@@ -47,6 +49,9 @@ import {DebugAgentConfig, ResolvedDebugAgentConfig} from './config';
 import {Debug, PackageInfo} from '../client/stackdriver/debug';
 import {Logger} from '../types/common';
 import {DebugApi} from './v8/debugapi';
+
+const TimedController = perf.timedClass(Controller);
+const TimedDebuggee = perf.timedClass(Debuggee);
 
 const promisify = require('util.promisify');
 
@@ -133,6 +138,7 @@ export class CachedPromise {
     }
   }
 }
+const TimedCachedPromise = perf.timedClass(CachedPromise);
 
 /**
  * IsReady will return a promise to user after user starting the debug agent.
@@ -153,6 +159,8 @@ class IsReadyImpl implements IsReady {
     return this.debuglet.isReady();
   }
 }
+
+const TimedIsReady = perf.timedClass(IsReadyImpl);
 
 export interface FindFilesResult {
   jsStats: scanner.ScanStats;
@@ -232,7 +240,7 @@ export class Debuglet extends EventEmitter {
     });
 
     /** @private {DebugletApi} */
-    this.controller = new Controller(this.debug);
+    this.controller = new TimedController(this.debug);
 
     /** @private {Debuggee} */
     this.debuggee = null;
@@ -245,7 +253,7 @@ export class Debuglet extends EventEmitter {
 
     this.breakpointFetched = null;
     this.breakpointFetchedTimestamp = -Infinity;
-    this.debuggeeRegistered = new CachedPromise();
+    this.debuggeeRegistered = new TimedCachedPromise();
   }
 
   static normalizeConfig_(config: DebugAgentConfig): ResolvedDebugAgentConfig {
@@ -494,7 +502,7 @@ export class Debuglet extends EventEmitter {
       sourceContexts: [sourceContext],
       packageInfo
     };
-    return new Debuggee(properties);
+    return new TimedDebuggee(properties);
   }
 
   static async getProjectId(options: AuthenticationConfig): Promise<string> {

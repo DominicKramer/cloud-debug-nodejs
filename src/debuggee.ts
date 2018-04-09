@@ -45,7 +45,7 @@ export class Debuggee {
     [key: string]: string,
   };
   statusMessage?: StatusMessage;
-  id: string;
+  id!: string;
   // TODO: This doesn't seem to ever be set but is referenced in the
   //       debuglet.ts file.
   isDisabled?: boolean;
@@ -75,9 +75,9 @@ export class Debuggee {
    *     TODO(ofrobots): has this been renamed to `status` in the API?
    */
   constructor(properties: DebuggeeProperties) {
-    if (!(this instanceof Debuggee)) {
-      return new Debuggee(properties);
-    }
+    //if (!(this instanceof Debuggee)) {
+    //  return new Debuggee(properties);
+    //}
 
     properties = properties || {};
 
